@@ -34,8 +34,6 @@
 #include <math.h>
 
 
-
-
 /**
  *  Global variables.
  */
@@ -45,8 +43,6 @@ GLdouble spider_leg_angle = 0.0;
 GLdouble fly_angle = 0.0;
 GLdouble spider2_movement = 0.0;
 GLdouble spider3_angle = 0.0;
-
-
 
 
 /**
@@ -87,8 +83,6 @@ void draw_grid (void) {
 }
 
 
-
-
 /**
  *  Color axes drawing routine.
  */
@@ -114,8 +108,6 @@ void draw_axes (void) {
 }
 
 
-
-
 /**
  *  Conveyor belt drawing routine.
  */
@@ -134,8 +126,6 @@ void draw_conveyor_belt (void) {
 }
 
 
-
-
 /**
  *  Spider's leg drawing routine.
  */
@@ -145,31 +135,28 @@ void draw_leg (GLdouble o, GLdouble s) {
     glPushMatrix();
         glRotatef(-27, 1.0, 0.0, 0.0);
         glRotatef((s * spider_leg_angle) + o, 0.0, 0.0, 1.0);
-        glPushMatrix();
-            glRotatef(-15.0, 1.0, 0.0, 0.0);
-            glRotatef(-((s * spider_leg_angle) + o), 0.0, 0.0, 1.0);
-            glColor3f(1.0, 0.2, 0.2);
-            glutWireCone(0.04, 1.2, 6, 6);
 
-            glTranslatef(0.0, 0.0, 1.2);
-            if (spider_leg_angle >= 0  &&  spider_leg_angle < 180.0 ) {
-                a = -(spider_leg_angle / 4);
-            } else {
-              a = -((360 - spider_leg_angle) / 4);
-            }
-            glRotatef(70 + a, 1.0, 0.0, 0.0);
-            glColor3f(0.2, 0.2, 1.0);
-            glutWireCone(0.02, 1.0, 6, 6);
+        glRotatef(-15.0, 1.0, 0.0, 0.0);
+        glRotatef(-((s * spider_leg_angle) + o), 0.0, 0.0, 1.0);
+        glColor3f(1.0, 0.2, 0.2);
+        glutWireCone(0.04, 1.2, 6, 6);
 
-            glTranslatef(0.0, 0.0, 1.0);
-            glRotatef(50 + a/2, 1.0, 0.0, 0.0);
-            glColor3f(0.5, 0.5, 1.0);
-            glutWireCone(0.01, 0.7, 6, 6);
-        glPopMatrix();
+        glTranslatef(0.0, 0.0, 1.2);
+        if (spider_leg_angle >= 0  &&  spider_leg_angle < 180.0 ) {
+            a = -(spider_leg_angle / 4);
+        } else {
+          a = -((360 - spider_leg_angle) / 4);
+        }
+        glRotatef(70 + a, 1.0, 0.0, 0.0);
+        glColor3f(0.2, 0.2, 1.0);
+        glutWireCone(0.02, 1.0, 6, 6);
+
+        glTranslatef(0.0, 0.0, 1.0);
+        glRotatef(50 + a/2, 1.0, 0.0, 0.0);
+        glColor3f(0.5, 0.5, 1.0);
+        glutWireCone(0.01, 0.7, 6, 6);
     glPopMatrix();
 }
-
-
 
 
 /**
@@ -218,8 +205,6 @@ void draw_spider (void) {
 }
 
 
-
-
 /**
  *  "Flies" drawing routine.
  */
@@ -243,10 +228,8 @@ void draw_flies (void) {
 }
 
 
-
-
 /**
- * Squiggle drawing routine.
+ * "Squiggle" drawing routine.
  */
 void draw_squiggle (void) {
     int i;
@@ -268,12 +251,22 @@ void draw_squiggle (void) {
 }
 
 
-
-
 /**
  *  Frame drawing function.
  */
 void display (void) {
+    int i;
+    GLdouble
+        p1[3][6] = {
+            { 0.0, 0.0, 0.0, spider3_angle, 5.0, 90.0 },
+            { 25.0, 0.0, 15.0, -spider3_angle, 6.0, -90.0 },
+            { -25.0, 0.0, 5.0, -spider3_angle, 4.0, -90.0 }
+        },
+        p2[2][3] = {
+            { -75.0 + spider2_movement, -12.0, 90.0 },
+            { -12.0, 75.0 - spider2_movement, 180.0 }
+        };
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     glRotatef(camera_rotation_angle, 0.0, 1.0, 0.0);
@@ -297,52 +290,30 @@ void display (void) {
         draw_flies();
     glPopMatrix();
 
-    /* 1st spider running around */
-    glPushMatrix();
-        glRotatef(spider3_angle, 0.0, 1.0, 0.0);
-        glTranslatef(0.0, 0.0, 5.0);
-        glRotatef(90.0, 0.0, 1.0, 0.0);
-        draw_spider();
-    glPopMatrix();
+    /* 3 spiders running around */
+    for (i = 0;  i < 3;  i++) {
+        glPushMatrix();
+            glTranslatef(p1[i][0], p1[i][1], p1[i][2]);
+            glRotatef(p1[i][3], 0.0, 1.0, 0.0);
+            glTranslatef(0.0, 0.0, p1[i][4]);
+            glRotatef(p1[i][5], 0.0, 1.0, 0.0);
+            draw_spider();
+        glPopMatrix();
+    }
 
-    /* 2nd spider running around */
-    glPushMatrix();
-        glTranslatef(25.0, 0.0, 15.0);
-        glRotatef(-spider3_angle, 0.0, 1.0, 0.0);
-        glTranslatef(0.0, 0.0, 6.0);
-        glRotatef(-90.0, 0.0, 1.0, 0.0);
-        draw_spider();
-    glPopMatrix();
-
-    /* 3rd spider running around */
-    glPushMatrix();
-        glTranslatef(-25.0, 0.0, 5.0);
-        glRotatef(-spider3_angle, 0.0, 1.0, 0.0);
-        glTranslatef(0.0, 0.0, 4.0);
-        glRotatef(-90.0, 0.0, 1.0, 0.0);
-        draw_spider();
-    glPopMatrix();
-
-    /* 1st spider running from "far away" */
-    glPushMatrix();
-        glTranslatef(-75.0 + spider2_movement, 0.0, -12.0);
-        glRotatef(90.0, 0.0, 1.0, 0.0);
-        draw_spider();
-    glPopMatrix();
-
-    /* 2nd spider running from "far away" */
-    glPushMatrix();
-        glTranslatef(-12, 0.0, 75.0 - spider2_movement);
-        glRotatef(180, 0.0, 1.0, 0.0);
-        draw_spider();
-    glPopMatrix();
+    /* 2 spiders from "far away" */
+    for (i = 0;  i < 2;  i++) {
+        glPushMatrix();
+            glTranslatef(p2[i][0], 0.0, p2[i][1]);
+            glRotatef(p2[i][2], 0.0, 1.0, 0.0);
+            draw_spider();
+        glPopMatrix();
+    }
 
     draw_squiggle();
 
     glutSwapBuffers();
 }
-
-
 
 
 /**
@@ -383,8 +354,6 @@ void animation (void) {
 }
 
 
-
-
 /**
  *  Viewport resize handler.
  */
@@ -399,8 +368,6 @@ void reshape (int w, int h) {
 }
 
 
-
-
 /**
  *  Keyboard handler.
  */
@@ -411,8 +378,6 @@ void keyboard (unsigned char key, int x, int y) {
             break;
     }
 }
-
-
 
 
 /**
