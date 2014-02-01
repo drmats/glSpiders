@@ -1,9 +1,20 @@
 /**
  *  glSpiders v. 0.0.1
  *
+ *  A very simple OpenGL animation app.
+ *
+ *  Wireframe spiders on a flat grid with rotating camera around.
+ *  No lights. No textures. No shadows. No depth buffer.
+ *
+ *  Original code written in 2005.
+ *
  *  Copyright (c) 2014, drmats
  *  All rights reserved.
  *
+ *  https://github.com/drmats/glSpiders
+ */
+
+/**
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are met:
  *
@@ -30,6 +41,8 @@
 #define _ISOC99_SOURCE
 
 #include <GL/glut.h>
+#include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -37,12 +50,19 @@
 /**
  *  Global variables.
  */
-GLfloat cameraRotationAngle = 0.0;
-GLfloat conveyorBeltPosition = -5.0;
-GLdouble spiderLegAngle = 0.0;
-GLdouble flyAngle = 0.0;
-GLdouble spider2Movement = 0.0;
-GLdouble spider3Angle = 0.0;
+bool fullScreen = false;
+struct screen_t {
+    int width;
+    int height;
+} screen;
+
+GLfloat
+    cameraRotationAngle = 0.0,
+    conveyorBeltPosition = -5.0,
+    spiderLegAngle = 0.0,
+    fliesAngle = 0.0,
+    spider2Movement = 0.0,
+    spider3Angle = 0.0;
 
 
 /**
@@ -114,11 +134,11 @@ inline void drawConveyorBelt (void) {
 /**
  *  Spider's leg drawing routine.
  */
-void drawLeg (GLdouble o, GLdouble s) {
-    int a;
+void drawLeg (GLfloat o, GLfloat s) {
+    GLfloat a;
 
     glPushMatrix();
-        glRotatef(-27, 1.0, 0.0, 0.0);
+        glRotatef(-27.0, 1.0, 0.0, 0.0);
         glRotatef((s * spiderLegAngle) + o, 0.0, 0.0, 1.0);
 
         glRotatef(-15.0, 1.0, 0.0, 0.0);
@@ -127,17 +147,17 @@ void drawLeg (GLdouble o, GLdouble s) {
         glutWireCone(0.04, 1.2, 6, 6);
 
         glTranslatef(0.0, 0.0, 1.2);
-        if (spiderLegAngle >= 0  &&  spiderLegAngle < 180.0 ) {
-            a = -(spiderLegAngle / 4);
+        if (spiderLegAngle >= 0.0  &&  spiderLegAngle < 180.0 ) {
+            a = -(spiderLegAngle / 4.0);
         } else {
-          a = -((360 - spiderLegAngle) / 4);
+          a = -((360.0 - spiderLegAngle) / 4.0);
         }
-        glRotatef(70 + a, 1.0, 0.0, 0.0);
+        glRotatef(70.0 + a, 1.0, 0.0, 0.0);
         glColor3f(0.2, 0.2, 1.0);
         glutWireCone(0.02, 1.0, 6, 6);
 
         glTranslatef(0.0, 0.0, 1.0);
-        glRotatef(50 + a/2, 1.0, 0.0, 0.0);
+        glRotatef(50 + a/2.0, 1.0, 0.0, 0.0);
         glColor3f(0.5, 0.5, 1.0);
         glutWireCone(0.01, 0.7, 6, 6);
     glPopMatrix();
@@ -196,7 +216,7 @@ inline void drawFlies (void) {
         glPushMatrix();
             glTranslatef(0.0, 1.5, 4.0);
             glRotatef(
-                flyAngle * (i+1) * 0.5,
+                fliesAngle * (i+1) * 0.5,
                 (i+1) % 2,
                 (i+4) % 2,
                 (i+8) % 2
@@ -311,19 +331,19 @@ void animation (void) {
         spider2Movement -= 150.0;
     }
 
-    spiderLegAngle += 12;
+    spiderLegAngle += 12.0;
     if (spiderLegAngle > 360.0) {
         spiderLegAngle -= 360.0;
     }
 
-    flyAngle += 5;
-    if (flyAngle > 7 * 360.0) {
-        flyAngle -= 8 * 360.0;
+    fliesAngle += 5.0;
+    if (fliesAngle > 7.0 * 360.0) {
+        fliesAngle -= 8.0 * 360.0;
     }
 
     spider3Angle += 1.5;
     if (spider3Angle > 360.0) {
-        spider3Angle-=360.0;
+        spider3Angle -= 360.0;
     }
 
     glutPostRedisplay();
@@ -343,7 +363,7 @@ void reshape (int w, int h) {
         0.0, 0.0, 0.0,
         0.0, 1.0, 0.0
     );
-    glRotatef(90, 0.0, 1.0, 0.0);
+    glRotatef(90.0, 0.0, 1.0, 0.0);
     glMatrixMode(GL_MODELVIEW);
 }
 
@@ -353,6 +373,16 @@ void reshape (int w, int h) {
  */
 void keyboard (unsigned char key, int x, int y) {
     switch (key) {
+        case 'f':
+            if (fullScreen) {
+                glutReshapeWindow(screen.width/2, screen.height/2);
+                glutPositionWindow(screen.width/4, screen.height/4);
+                fullScreen = false;
+            } else {
+                glutFullScreen();
+                fullScreen = true;
+            }
+            break;
         case 'q':
             exit(0);
             break;
@@ -364,12 +394,18 @@ void keyboard (unsigned char key, int x, int y) {
  *  Program entry point.
  */
 int main (int argc, char** argv) {
+    char* appName = "glSpiders v. 0.0.1";
+
+    fprintf(stderr, "%s\n", appName);
+
     /* glut initialization */
     glutInit(&argc, argv);
+    screen.width = glutGet(GLUT_SCREEN_WIDTH);
+    screen.height = glutGet(GLUT_SCREEN_HEIGHT);    
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize(800, 450);
-    glutInitWindowPosition(100, 100);
-    glutCreateWindow(argv[0]);
+    glutInitWindowSize(screen.width/2, screen.height/2);
+    glutInitWindowPosition(screen.width/4, screen.height/4);
+    glutCreateWindow(appName);
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
 
@@ -379,8 +415,12 @@ int main (int argc, char** argv) {
     glutKeyboardFunc(keyboard);
     glutIdleFunc(animation);
 
-    /* go full screen and enter main loop */
-    glutFullScreen();
+    fprintf(stderr,
+        "  [q] - quit\n"
+        "  [f] - full screen toggle\n"
+    );
+
+    /* enter main loop */
     glutMainLoop();
 
     exit(0);

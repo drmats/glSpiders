@@ -32,8 +32,9 @@ Clone the repository and invoke compilation:
 ## usage
 
     $ ./glSpiders
-
-To quit the application press "q" on your keyboard.
+    glSpiders v. 0.0.1
+      [q] - quit
+      [f] - full screen toggle
 
 
 
