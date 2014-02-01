@@ -50,7 +50,7 @@ GLdouble spider3_angle = 0.0;
 
 
 /**
- *  Spider leg drawing routine.
+ *  Spider's leg drawing routine.
  */
 void draw_leg (GLdouble o, GLdouble s) {
     int a = 0;
@@ -124,7 +124,7 @@ void draw_spider (void) {
             glRotatef(-80.0, 0.0, 1.0, 0.0);
             for (i = 0;  i < 3;  i++) {
                 glRotatef(40.0, 0.0, 1.0, 0.0);
-                draw_leg((GLdouble)((((i + 1) * 120) % 360) + 60), -1.0);
+                draw_leg((((i+1) * 120) % 360) + 60, -1.0);
             }
         glPopMatrix();
     glPopMatrix();
@@ -226,12 +226,12 @@ void display (void) {
                 glTranslatef(0.0, 1.5, 4.0);
                 glRotatef(
                     fly_angle * (i+1) * 0.5,
-                    (GLdouble)((i+1) % 2),
-                    (GLdouble)((i+4) % 2),
-                    (GLdouble)((i+8) % 2)
+                    (i+1) % 2,
+                    (i+4) % 2,
+                    (i+8) % 2
                 );
-                glTranslatef(0.0, 0.2 + (GLdouble)i / 8.0, 0.0);
-                glColor3f(0.4, 1.0, (GLdouble)i / 7.0);
+                glTranslatef(0.0, 0.2 + (i / 8.0), 0.0);
+                glColor3f(0.4, 1.0, i / 7.0);
                 glutWireCube(0.05);
             glPopMatrix();
         }
@@ -343,10 +343,10 @@ void animation (void) {
  *  Viewport resize handler.
  */
 void reshape (int w, int h) {
-    glViewport(0, 0, (GLsizei) w, (GLsizei) h);
+    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60, (GLdouble)w/(GLdouble)h, 1.5, 100);
+    gluPerspective(60, (GLdouble)w / (GLdouble)h, 1.5, 100);
     gluLookAt(10.0, 11.0, 12.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     glRotatef(90, 0.0, 1.0, 0.0);
     glMatrixMode(GL_MODELVIEW);
