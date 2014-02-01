@@ -49,37 +49,29 @@ GLdouble spider3Angle = 0.0;
  *  Grid drawing routine.
  */
 void drawGrid (void) {
-    int i;
+    int i, j;
+    GLfloat p[2][8] = {
+        { -50.0, 0.0, 2.0, 0.0, 0.0, 50.0, 0.0, -50.0 },
+        { 0.0, -50.0, 0.0, 2.0, 50.0, 0.0, -50.0, -0.0 }
+    };
 
     glColor3f(0.2, 0.2, 0.2);
-    glPushMatrix();
-        glTranslatef(-50.0, 0.0, 0.0);
-        for (i = 0;  i < 50;  i++) {
-            glTranslatef(2.0, 0.0, 0.0);
-            glBegin(GL_LINES);
-                glVertex3f(0.0, 0.0, 0.0);
-                glVertex3f(0.0, 0.0, 50.0);
-            glEnd();
-            glBegin(GL_LINES);
-                glVertex3f(0.0, 0.0, 0.0);
-                glVertex3f(0.0, 0.0, -50.0);
-            glEnd();
-        }
-    glPopMatrix();
-    glPushMatrix();
-        glTranslatef(0.0, 0.0, -50.0);
-        for (i = 0;  i < 50;  i++) {
-            glTranslatef(0.0, 0.0, 2.0);
-            glBegin(GL_LINES);
-                glVertex3f(0.0, 0.0, 0.0);
-                glVertex3f(50.0, 0.0, 0.0);
-            glEnd();
-            glBegin(GL_LINES);
-                glVertex3f(0.0, 0.0, 0.0);
-                glVertex3f(-50.0, 0.0, 0.0);
-            glEnd();
-        }
-    glPopMatrix();
+    for (i = 0;  i < 2;  i++) {
+        glPushMatrix();
+            glTranslatef(p[i][0], 0.0, p[i][1]);
+            for (j = 0;  j < 50;  j++) {
+                glTranslatef(p[i][2], 0.0, p[i][3]);
+                glBegin(GL_LINES);
+                    glVertex3f(0.0, 0.0, 0.0);
+                    glVertex3f(p[i][4], 0.0, p[i][5]);
+                glEnd();
+                glBegin(GL_LINES);
+                    glVertex3f(0.0, 0.0, 0.0);
+                    glVertex3f(p[i][6], 0.0, p[i][7]);
+                glEnd();
+            }
+        glPopMatrix();
+    }
 }
 
 
@@ -87,24 +79,21 @@ void drawGrid (void) {
  *  Color axes drawing routine.
  */
 void drawAxes (void) {
-    glBegin(GL_LINES);
-        glColor3f(1.0, 1.0, 1.0);
-        glVertex3f(0.0, 0.0, 0.0);
-        glColor3f(1.0, 0.0, 0.0);
-        glVertex3f(3.0, 0.0, 0.0);
-    glEnd();
-    glBegin(GL_LINES);
-        glColor3f(1.0, 1.0, 1.0);
-        glVertex3f(0.0, 0.0, 0.0);
-        glColor3f(0.0, 1.0, 0.0);
-        glVertex3f(0.0, 3.0, 0.0);
-    glEnd();
-    glBegin(GL_LINES);
-        glColor3f(1.0, 1.0, 1.0);
-        glVertex3f(0.0, 0.0, 0.0);
-        glColor3f(0.0, 0.0, 1.0);
-        glVertex3f(0.0, 0.0, 3.0);
-    glEnd();
+    int i;
+    GLfloat p[3][6] = {
+        { 1.0, 0.0, 0.0,    3.0, 0.0, 0.0 },
+        { 0.0, 1.0, 0.0,    0.0, 3.0, 0.0 },
+        { 0.0, 0.0, 1.0,    0.0, 0.0, 3.0 }
+    };
+
+    for (i = 0;  i < 3;  i++) {
+        glBegin(GL_LINES);
+            glColor3f(1.0, 1.0, 1.0);
+            glVertex3f(0.0, 0.0, 0.0);
+            glColor3f(p[i][0], p[i][1], p[i][2]);
+            glVertex3f(p[i][3], p[i][4], p[i][5]);
+        glEnd();    
+    }
 }
 
 
@@ -256,7 +245,7 @@ void drawSquiggle (void) {
  */
 void display (void) {
     int i;
-    GLdouble
+    GLfloat
         p1[3][6] = {
             { 0.0, 0.0, 0.0, spider3Angle, 5.0, 90.0 },
             { 25.0, 0.0, 15.0, -spider3Angle, 6.0, -90.0 },
@@ -362,7 +351,11 @@ void reshape (int w, int h) {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(60, (GLdouble)w / (GLdouble)h, 1.5, 100);
-    gluLookAt(10.0, 11.0, 12.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    gluLookAt(
+        10.0, 11.0, 12.0,
+        0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0
+    );
     glRotatef(90, 0.0, 1.0, 0.0);
     glMatrixMode(GL_MODELVIEW);
 }
