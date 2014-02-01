@@ -42,10 +42,10 @@ To quit the application press "q" on your keyboard.
 
 * C compiler with good
   [**ISO C99** (ISO/IEC 9899:1999)](https://en.wikipedia.org/wiki/C99)
-  support (any _maintained_ version of [gcc](http://gcc.gnu.org/) will do)
-* [GNU Make](http://www.gnu.org/software/make/)
+  support (any _maintained_ version of [**gcc**](http://gcc.gnu.org/) will do)
+* [**GNU Make**](http://www.gnu.org/software/make/)
 * [GLUT](http://www.opengl.org/resources/libraries/glut/)-compatible library
-  (i.e. [freeglut](http://freeglut.sourceforge.net/))
+  (i.e. [**freeglut**](http://freeglut.sourceforge.net/))
 
 
 
