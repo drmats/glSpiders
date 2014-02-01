@@ -1,5 +1,5 @@
 /**
- *  glspiders v. 0.0.1
+ *  glSpiders v. 0.0.1
  *
  *  Copyright (c) 2014, drmats
  *  All rights reserved.
