@@ -48,18 +48,17 @@ GLdouble spider3Angle = 0.0;
 /**
  *  Grid drawing routine.
  */
-void drawGrid (void) {
-    int i, j;
+inline void drawGrid (void) {
     GLfloat p[2][8] = {
         { -50.0, 0.0, 2.0, 0.0, 0.0, 50.0, 0.0, -50.0 },
         { 0.0, -50.0, 0.0, 2.0, 50.0, 0.0, -50.0, -0.0 }
     };
 
     glColor3f(0.2, 0.2, 0.2);
-    for (i = 0;  i < 2;  i++) {
+    for (int i = 0;  i < 2;  i++) {
         glPushMatrix();
             glTranslatef(p[i][0], 0.0, p[i][1]);
-            for (j = 0;  j < 50;  j++) {
+            for (int j = 0;  j < 50;  j++) {
                 glTranslatef(p[i][2], 0.0, p[i][3]);
                 glBegin(GL_LINES);
                     glVertex3f(0.0, 0.0, 0.0);
@@ -78,15 +77,14 @@ void drawGrid (void) {
 /**
  *  Color axes drawing routine.
  */
-void drawAxes (void) {
-    int i;
+inline void drawAxes (void) {
     GLfloat p[3][6] = {
         { 1.0, 0.0, 0.0,    3.0, 0.0, 0.0 },
         { 0.0, 1.0, 0.0,    0.0, 3.0, 0.0 },
         { 0.0, 0.0, 1.0,    0.0, 0.0, 3.0 }
     };
 
-    for (i = 0;  i < 3;  i++) {
+    for (int i = 0;  i < 3;  i++) {
         glBegin(GL_LINES);
             glColor3f(1.0, 1.0, 1.0);
             glVertex3f(0.0, 0.0, 0.0);
@@ -100,14 +98,12 @@ void drawAxes (void) {
 /**
  *  Conveyor belt drawing routine.
  */
-void drawConveyorBelt (void) {
-    int i;
-
+inline void drawConveyorBelt (void) {
     glPushMatrix();
         glScalef(1.3, 0.01, 0.9);
         glTranslatef(0.0, 0.0, -(25*5) + conveyorBeltPosition);
         glColor3f(0.8, 0.8, 0.0);
-        for (i = 0;  i < 50;  i++) {
+        for (int i = 0;  i < 50;  i++) {
             glutWireCube(5.0);
             glTranslatef(0.0, 0.0, 5.0);
         }
@@ -119,7 +115,7 @@ void drawConveyorBelt (void) {
  *  Spider's leg drawing routine.
  */
 void drawLeg (GLdouble o, GLdouble s) {
-    int a = 0;
+    int a;
 
     glPushMatrix();
         glRotatef(-27, 1.0, 0.0, 0.0);
@@ -152,8 +148,6 @@ void drawLeg (GLdouble o, GLdouble s) {
  *  Spider drawing routine.
  */
 void drawSpider (void) {
-    int i;
-
     glPushMatrix();
 
         /* belly */
@@ -175,7 +169,7 @@ void drawSpider (void) {
         /* legs */
         glPushMatrix();
             glRotatef(80.0, 0.0, 1.0, 0.0);
-            for (i = 0;  i < 3;  i++) {
+            for (int i = 0;  i < 3;  i++) {
                 glRotatef(-40.0, 0.0, 1.0, 0.0);
                 drawLeg(i * 120.0, 1.0);
             }
@@ -185,7 +179,7 @@ void drawSpider (void) {
 
         glPushMatrix();
             glRotatef(-80.0, 0.0, 1.0, 0.0);
-            for (i = 0;  i < 3;  i++) {
+            for (int i = 0;  i < 3;  i++) {
                 glRotatef(40.0, 0.0, 1.0, 0.0);
                 drawLeg((((i+1) * 120) % 360) + 60, -1.0);
             }
@@ -197,10 +191,8 @@ void drawSpider (void) {
 /**
  *  "Flies" drawing routine.
  */
-void drawFlies (void) {
-    int i;
-
-    for (i = 0;  i < 7;  i++) {
+inline void drawFlies (void) {
+    for (int i = 0;  i < 7;  i++) {
         glPushMatrix();
             glTranslatef(0.0, 1.5, 4.0);
             glRotatef(
@@ -220,12 +212,10 @@ void drawFlies (void) {
 /**
  * "Squiggle" drawing routine.
  */
-void drawSquiggle (void) {
-    int i;
-
+inline void drawSquiggle (void) {
     glPushMatrix();
         glTranslatef(10.0, 2.1, -70.0);
-        for (i = 0;  i < 288;  i++) {
+        for (int i = 0;  i < 288;  i++) {
             if (i % 12 == (int)(floor(cameraRotationAngle * 0.7)) % 12) {
                 glColor3f(1.0, 1.0, 0.0);
             } else {
@@ -244,18 +234,6 @@ void drawSquiggle (void) {
  *  Frame drawing function.
  */
 void display (void) {
-    int i;
-    GLfloat
-        p1[3][6] = {
-            { 0.0, 0.0, 0.0, spider3Angle, 5.0, 90.0 },
-            { 25.0, 0.0, 15.0, -spider3Angle, 6.0, -90.0 },
-            { -25.0, 0.0, 5.0, -spider3Angle, 4.0, -90.0 }
-        },
-        p2[2][3] = {
-            { -75.0 + spider2Movement, -12.0, 90.0 },
-            { -12.0, 75.0 - spider2Movement, 180.0 }
-        };
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     glRotatef(cameraRotationAngle, 0.0, 1.0, 0.0);
@@ -280,7 +258,12 @@ void display (void) {
     glPopMatrix();
 
     /* 3 spiders running around */
-    for (i = 0;  i < 3;  i++) {
+    GLfloat p1[3][6] = {
+        { 0.0, 0.0, 0.0, spider3Angle, 5.0, 90.0 },
+        { 25.0, 0.0, 15.0, -spider3Angle, 6.0, -90.0 },
+        { -25.0, 0.0, 5.0, -spider3Angle, 4.0, -90.0 }
+    };
+    for (int i = 0;  i < 3;  i++) {
         glPushMatrix();
             glTranslatef(p1[i][0], p1[i][1], p1[i][2]);
             glRotatef(p1[i][3], 0.0, 1.0, 0.0);
@@ -291,7 +274,11 @@ void display (void) {
     }
 
     /* 2 spiders from "far away" */
-    for (i = 0;  i < 2;  i++) {
+    GLfloat p2[2][3] = {
+        { -75.0 + spider2Movement, -12.0, 90.0 },
+        { -12.0, 75.0 - spider2Movement, 180.0 }
+    };
+    for (int i = 0;  i < 2;  i++) {
         glPushMatrix();
             glTranslatef(p2[i][0], 0.0, p2[i][1]);
             glRotatef(p2[i][2], 0.0, 1.0, 0.0);
