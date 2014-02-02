@@ -24,7 +24,18 @@ Clone the repository and invoke compilation:
 
     $ git clone https://github.com/drmats/glSpiders.git
     $ cd glSpiders
-    $ make
+    
+* on linux:
+
+        $ make linux
+
+* on windows:
+
+        > make windows
+
+_to build statically linked windows executable:_
+
+    > make win_static
 
 
 
@@ -33,8 +44,8 @@ Clone the repository and invoke compilation:
 
     $ ./glSpiders
     glSpiders v. 0.0.1
-      [q] - quit
       [f] - full screen toggle
+      [q] - quit
 
 
 
@@ -47,6 +58,11 @@ Clone the repository and invoke compilation:
 * [**GNU Make**](http://www.gnu.org/software/make/)
 * [GLUT](http://www.opengl.org/resources/libraries/glut/)-compatible library
   (i.e. [**freeglut**](http://freeglut.sourceforge.net/))
+
+### windows-specific
+
+* [**MinGW**](http://www.mingw.org/)
+* [freeglut windows development binaries](http://www.transmissionzero.co.uk/software/freeglut-devel/)
 
 
 

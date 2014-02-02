@@ -40,6 +40,15 @@
 
 #define _ISOC99_SOURCE
 
+#if defined(__linux) || defined(__linux__)
+#define INLINE inline
+#define FACTOR 1.0
+#endif
+#if defined(__WIN32) || defined(__WIN32__)
+#define INLINE
+#define FACTOR 0.7
+#endif
+
 #include <GL/glut.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -68,7 +77,7 @@ GLfloat
 /**
  *  Grid drawing routine.
  */
-inline void drawGrid (void) {
+INLINE void drawGrid (void) {
     GLfloat p[2][8] = {
         { -50.0, 0.0, 2.0, 0.0, 0.0, 50.0, 0.0, -50.0 },
         { 0.0, -50.0, 0.0, 2.0, 50.0, 0.0, -50.0, -0.0 }
@@ -97,7 +106,7 @@ inline void drawGrid (void) {
 /**
  *  Color axes drawing routine.
  */
-inline void drawAxes (void) {
+INLINE void drawAxes (void) {
     GLfloat p[3][6] = {
         { 1.0, 0.0, 0.0,    3.0, 0.0, 0.0 },
         { 0.0, 1.0, 0.0,    0.0, 3.0, 0.0 },
@@ -118,7 +127,7 @@ inline void drawAxes (void) {
 /**
  *  Conveyor belt drawing routine.
  */
-inline void drawConveyorBelt (void) {
+INLINE void drawConveyorBelt (void) {
     glPushMatrix();
         glScalef(1.3, 0.01, 0.9);
         glTranslatef(0.0, 0.0, -(25*5) + conveyorBeltPosition);
@@ -170,14 +179,14 @@ void drawLeg (GLfloat o, GLfloat s) {
 void drawSpider (void) {
     glPushMatrix();
 
-        /* belly */
+        // belly 
         glPushMatrix();
             glScalef(1.0, 0.7, 1.3);
             glColor3f(1.0, 0.2, 0.2);
             glutWireSphere(0.2, 12, 12);
         glPopMatrix();
 
-        /* head */
+        // head 
         glPushMatrix();
             glTranslatef(0.0, 0.0, 0.2 * 1.3 + 0.06);
             glColor3f(0.5, 0.5, 1.0);
@@ -186,7 +195,7 @@ void drawSpider (void) {
 
         glRotatef(90.0, 0.0, 1.0, 0.0);
 
-        /* legs */
+        // legs 
         glPushMatrix();
             glRotatef(80.0, 0.0, 1.0, 0.0);
             for (int i = 0;  i < 3;  i++) {
@@ -211,7 +220,7 @@ void drawSpider (void) {
 /**
  *  "Flies" drawing routine.
  */
-inline void drawFlies (void) {
+INLINE void drawFlies (void) {
     for (int i = 0;  i < 7;  i++) {
         glPushMatrix();
             glTranslatef(0.0, 1.5, 4.0);
@@ -232,7 +241,7 @@ inline void drawFlies (void) {
 /**
  * "Squiggle" drawing routine.
  */
-inline void drawSquiggle (void) {
+INLINE void drawSquiggle (void) {
     glPushMatrix();
         glTranslatef(10.0, 2.1, -70.0);
         for (int i = 0;  i < 288;  i++) {
@@ -268,7 +277,7 @@ void display (void) {
 
         drawConveyorBelt();
 
-        /* spider on conveyor belt */
+        // spider on conveyor belt 
         glPushMatrix();
             glTranslatef(0.0, 0.9, 0.0);
             drawSpider();
@@ -277,7 +286,7 @@ void display (void) {
         drawFlies();
     glPopMatrix();
 
-    /* 3 spiders running around */
+    // 3 spiders running around 
     GLfloat p1[3][6] = {
         { 0.0, 0.0, 0.0, spider3Angle, 5.0, 90.0 },
         { 25.0, 0.0, 15.0, -spider3Angle, 6.0, -90.0 },
@@ -293,7 +302,7 @@ void display (void) {
         glPopMatrix();
     }
 
-    /* 2 spiders from "far away" */
+    // 2 spiders from "far away" 
     GLfloat p2[2][3] = {
         { -75.0 + spider2Movement, -12.0, 90.0 },
         { -12.0, 75.0 - spider2Movement, 180.0 }
@@ -316,32 +325,32 @@ void display (void) {
  *  Periodically called for variables update.
  */
 void animation (void) {
-    cameraRotationAngle += 0.9;
+    cameraRotationAngle += 0.9 * FACTOR;
     if (cameraRotationAngle > 360.0) {
         cameraRotationAngle -= 360.0;
     }
 
-    conveyorBeltPosition -= 0.21;
+    conveyorBeltPosition -= 0.21 * FACTOR;
     if (conveyorBeltPosition < 0.0) {
         conveyorBeltPosition += 5.0;
     }
 
-    spider2Movement += 0.21 * 0.9;
+    spider2Movement += 0.21 * 0.9 * FACTOR;
     if (spider2Movement > 150.0) {
         spider2Movement -= 150.0;
     }
 
-    spiderLegAngle += 12.0;
+    spiderLegAngle += 12.0 * FACTOR;
     if (spiderLegAngle > 360.0) {
         spiderLegAngle -= 360.0;
     }
 
-    fliesAngle += 5.0;
+    fliesAngle += 5.0 * FACTOR;
     if (fliesAngle > 7.0 * 360.0) {
         fliesAngle -= 8.0 * 360.0;
     }
 
-    spider3Angle += 1.5;
+    spider3Angle += 1.5 * FACTOR;
     if (spider3Angle > 360.0) {
         spider3Angle -= 360.0;
     }
@@ -398,10 +407,10 @@ int main (int argc, char** argv) {
 
     fprintf(stderr, "%s\n", appName);
 
-    /* glut initialization */
+    // glut initialization 
     glutInit(&argc, argv);
     screen.width = glutGet(GLUT_SCREEN_WIDTH);
-    screen.height = glutGet(GLUT_SCREEN_HEIGHT);    
+    screen.height = glutGet(GLUT_SCREEN_HEIGHT);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(screen.width/2, screen.height/2);
     glutInitWindowPosition(screen.width/4, screen.height/4);
@@ -409,18 +418,18 @@ int main (int argc, char** argv) {
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
 
-    /* handlers assignment */
+    // handlers assignment 
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutKeyboardFunc(keyboard);
     glutIdleFunc(animation);
 
     fprintf(stderr,
-        "  [q] - quit\n"
         "  [f] - full screen toggle\n"
+        "  [q] - quit\n"
     );
 
-    /* enter main loop */
+    // enter main loop 
     glutMainLoop();
 
     exit(0);
