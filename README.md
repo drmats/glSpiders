@@ -2,7 +2,7 @@
 
 <a href="https://github.com/drmats/glSpiders/">
     <img
-        src="https://raw2.github.com/drmats/glSpiders/master/icon.png"
+        src="https://raw.githubusercontent.com/drmats/glSpiders/master/icon.png"
         align="left"
         hspace="10"
     >
