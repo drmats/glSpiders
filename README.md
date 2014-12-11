@@ -70,5 +70,5 @@ _to build statically linked windows executable:_
 ## license
 
 **glSpiders** are released under the BSD 2-Clause license. See the
-[LICENSE](https://raw2.github.com/drmats/glSpiders/master/LICENSE)
+[LICENSE](https://raw.githubusercontent.com/drmats/glSpiders/master/LICENSE)
 for more details.
