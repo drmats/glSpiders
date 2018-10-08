@@ -10,10 +10,12 @@
 
 A _very simple_ [OpenGL](http://www.opengl.org/) animation app.
 
-Wireframe spiders on a flat grid with rotating camera around.<br>
+Wireframe spiders on a flat grid with rotating camera around.<br />
 No lights. No textures. No shadows. No depth buffer.
 
 Original code written in 2005.
+
+<br />
 
 
 
@@ -22,30 +24,44 @@ Original code written in 2005.
 
 Clone the repository and invoke compilation:
 
-    $ git clone https://github.com/drmats/glSpiders.git
-    $ cd glSpiders
-    
+```bash
+$ git clone https://github.com/drmats/glSpiders.git
+$ cd glSpiders
+```
+
 * on linux:
 
-        $ make linux
+```bash
+$ make linux
+```
 
 * on windows:
 
-        > make windows
+```
+> make windows
+```
 
 _to build statically linked windows executable:_
 
-    > make win_static
+```
+> make win_static
+```
+
+<br />
 
 
 
 
 ## usage
 
-    $ ./glSpiders
-    glSpiders v. 0.0.1
-      [f] - full screen toggle
-      [q] - quit
+```bash
+$ ./glSpiders
+glSpiders v. 0.0.1
+    [f] - full screen toggle
+    [q] - quit
+```
+
+<br />
 
 
 
@@ -59,10 +75,13 @@ _to build statically linked windows executable:_
 * [GLUT](http://www.opengl.org/resources/libraries/glut/)-compatible library
   (i.e. [**freeglut**](http://freeglut.sourceforge.net/))
 
+
 ### windows-specific
 
 * [**MinGW**](http://www.mingw.org/)
 * [freeglut windows development binaries](http://www.transmissionzero.co.uk/software/freeglut-devel/)
+
+<br />
 
 
 
